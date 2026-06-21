@@ -1,13 +1,12 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
-export default function EditTripPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+export default function NewTripPage() {
   const router = useRouter()
   const [form, setForm] = useState({
     name: '',
@@ -19,32 +18,8 @@ export default function EditTripPage({ params }: { params: Promise<{ id: string 
     status: 'open',
     description: '',
   })
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    fetchTrip()
-  }, [id])
-
-  async function fetchTrip() {
-    const supabase = createClient()
-    const { data } = await supabase.from('trips').select('*').eq('id', id).single()
-
-    if (data) {
-      setForm({
-        name: data.name,
-        destination: data.destination,
-        start_date: data.start_date,
-        end_date: data.end_date,
-        price_with_gst: String(data.price_with_gst),
-        total_seats: String(data.total_seats),
-        status: data.status,
-        description: data.description || '',
-      })
-    }
-    setLoading(false)
-  }
 
   async function handleSave() {
     if (!form.name || !form.destination || !form.start_date || !form.end_date || !form.price_with_gst || !form.total_seats) {
@@ -56,22 +31,19 @@ export default function EditTripPage({ params }: { params: Promise<{ id: string 
     setError('')
 
     const supabase = createClient()
-    const { error: updateError } = await supabase
-      .from('trips')
-      .update({
-        name: form.name,
-        destination: form.destination,
-        start_date: form.start_date,
-        end_date: form.end_date,
-        price_with_gst: parseFloat(form.price_with_gst),
-        total_seats: parseInt(form.total_seats),
-        status: form.status,
-        description: form.description,
-      })
-      .eq('id', id)
+    const { error: insertError } = await supabase.from('trips').insert({
+      name: form.name,
+      destination: form.destination,
+      start_date: form.start_date,
+      end_date: form.end_date,
+      price_with_gst: parseFloat(form.price_with_gst),
+      total_seats: parseInt(form.total_seats),
+      status: form.status,
+      description: form.description,
+    })
 
-    if (updateError) {
-      setError(updateError.message)
+    if (insertError) {
+      setError(insertError.message)
       setSaving(false)
       return
     }
@@ -80,15 +52,13 @@ export default function EditTripPage({ params }: { params: Promise<{ id: string 
     router.refresh()
   }
 
-  if (loading) return <p className="text-[#1C1B1A]/50 text-sm">Loading...</p>
-
   return (
     <div className="max-w-xl">
       <Link href="/admin/trips" className="inline-flex items-center gap-1 text-sm text-[#1C1B1A]/50 hover:text-[#D55D27] mb-6">
         <ArrowLeft size={14} /> Back to trips
       </Link>
 
-      <h1 className="text-xl font-bold text-[#1C1B1A] mb-6">Edit trip</h1>
+      <h1 className="text-xl font-bold text-[#1C1B1A] mb-6">New trip</h1>
 
       <div className="bg-white rounded-xl border border-[#1C1B1A]/10 p-6 space-y-4">
         <div>
@@ -180,7 +150,7 @@ export default function EditTripPage({ params }: { params: Promise<{ id: string 
           disabled={saving}
           className="bg-[#1C1B1A] text-white text-sm px-5 py-2.5 rounded-lg hover:bg-[#D55D27] disabled:opacity-50 transition-colors"
         >
-          {saving ? 'Saving...' : 'Save changes'}
+          {saving ? 'Saving...' : 'Create trip'}
         </button>
       </div>
     </div>
