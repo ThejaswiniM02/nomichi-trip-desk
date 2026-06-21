@@ -3,7 +3,7 @@
 A working CRM built for Nomichi's team to manage trip enquiries end to end — from first contact to a confirmed seat — alongside a public-facing page where travellers can browse trips and enquire.
 
 **Live app:** https://nomichi-trip-desk-eight.vercel.app
-**Admin login:** admin@nomichi.com / **password**: admin123
+**Admin login:** admin@nomichi.com / **password**: shared separately in email
 
 ## What I built
 
