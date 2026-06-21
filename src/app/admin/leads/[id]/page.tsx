@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Lead, LeadStatus, CallLog } from '@/types'
 import { ArrowLeft } from 'lucide-react'
 import CallLogSection from '@/components/leads/CallLogSection'
+import AIMessageDraft from '@/components/leads/AIMessageDraft'
 
 const STATUSES: LeadStatus[] = ['NEW', 'CONTACTED', 'QUALIFIED', 'VIBE_CHECK_SENT', 'CONFIRMED', 'NOT_A_FIT']
 
@@ -95,6 +96,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ id: strin
             )}
           </div>
 
+          <AIMessageDraft lead={lead} />
           <CallLogSection leadId={id} callLogs={callLogs} onLogAdded={fetchCallLogs} />
         </div>
 

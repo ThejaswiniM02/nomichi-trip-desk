@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 Style rules: second person, short sentences, no exclamation marks, no em-dashes, no words like "unlock", "elevate", or "embark". Warm, honest, specific, still. Keep it under 50 words. Just return the message text, nothing else.`
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
