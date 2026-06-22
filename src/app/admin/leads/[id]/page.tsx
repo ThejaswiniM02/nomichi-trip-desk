@@ -96,7 +96,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ id: strin
             )}
           </div>
 
-          <AIMessageDraft lead={lead} />
+          <AIMessageDraft lead={lead} callLogs={callLogs} />
           <CallLogSection leadId={id} callLogs={callLogs} onLogAdded={fetchCallLogs} />
         </div>
 
