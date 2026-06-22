@@ -43,11 +43,42 @@ export default function LeadsPage() {
     const matchesStatus = statusFilter === 'ALL' || lead.status === statusFilter
     return matchesSearch && matchesStatus
   })
+  function exportCSV() {
+  const headers = ['Name', 'Email', 'Phone', 'Trip', 'Group Type', 'Preferred Month', 'Status', 'Received']
+  const rows = filtered.map((lead) => [
+    lead.name,
+    lead.email,
+    lead.phone,
+    lead.trip?.name || '',
+    lead.group_type,
+    lead.preferred_month,
+    lead.status,
+    new Date(lead.created_at).toLocaleDateString('en-IN'),
+  ])
 
+  const csv = [headers, ...rows]
+    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .join('\n')
+
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `nomichi-leads-${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+}
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#1C1B1A]">Leads</h1>
+<button
+  onClick={exportCSV}
+  disabled={filtered.length === 0}
+  className="text-sm border border-[#1C1B1A]/20 text-[#1C1B1A]/70 px-4 py-2 rounded-lg hover:border-[#D55D27] hover:text-[#D55D27] disabled:opacity-40 transition-colors"
+>
+  Export CSV
+</button>
       </div>
 
       <div className="flex gap-3 mb-6">
